@@ -291,7 +291,7 @@ if(APPLE)
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS monado-macos-rev)
     file(STRINGS monado-macos-rev MONADO_MACOS_REV)
     FetchContent_Declare(monado
-        GIT_REPOSITORY   https://github.com/monofunc/monado.git
+        GIT_REPOSITORY   https://github.com/H644b/monado.git
         GIT_TAG          ${MONADO_MACOS_REV}
         PATCH_COMMAND    ${CMAKE_CURRENT_LIST_DIR}/patches/apply.sh ${MONADO_MACOS_PATCHES}
         EXCLUDE_FROM_ALL
