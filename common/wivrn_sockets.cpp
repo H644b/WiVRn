@@ -470,14 +470,14 @@ size_t wivrn::UDP::send_raw(serialization_packet && packet)
 		memcpy(full_iv.data(), &counter, sizeof(uint64_t)); // TODO: endianness?
 		memcpy(full_iv.data() + sizeof(uint64_t), send_iv_header.data(), send_iv_header.size());
 
-		iovecs.emplace_back(&counter, sizeof(uint64_t));
+		iovecs.push_back({(void *)&counter, sizeof(uint64_t)});
 
 		encrypter.set_key_and_iv(key, full_iv);
 		encrypter.encrypt_in_place(data);
 	}
 
 	for (const auto & span: data)
-		iovecs.emplace_back(span.data(), span.size());
+		iovecs.push_back({(void *)span.data(), span.size()});
 
 	if (ssize_t sent = ::writev(fd, iovecs.data(), iovecs.size()); sent >= 0)
 		return sent;
@@ -518,7 +518,7 @@ size_t wivrn::UDP::send_many_raw(std::span<serialization_packet> packets)
 			memcpy(full_iv.data(), &iv_counters.back(), sizeof(uint64_t)); // TODO: endianness?
 			memcpy(full_iv.data() + sizeof(uint64_t), send_iv_header.data(), send_iv_header.size());
 
-			iovecs.emplace_back(&iv_counters.back(), sizeof(uint64_t));
+			iovecs.push_back({(void *)&iv_counters.back(), sizeof(uint64_t)});
 
 			encrypter.set_key_and_iv(key, full_iv);
 			encrypter.encrypt_in_place(data);
@@ -526,7 +526,7 @@ size_t wivrn::UDP::send_many_raw(std::span<serialization_packet> packets)
 
 		for (const auto & span: data)
 		{
-			iovecs.emplace_back(span.data(), span.size_bytes());
+			iovecs.push_back({(void *)span.data(), span.size_bytes()});
 			sent += span.size();
 		}
 
@@ -639,11 +639,11 @@ size_t wivrn::TCP::send_raw(serialization_packet && packet)
 	std::vector<std::span<uint8_t>> & data = packet;
 
 	uint32_t size = 0;
-	iovecs.emplace_back(&size, sizeof(size));
+	iovecs.push_back({(void *)&size, sizeof(size)});
 	for (const auto & span: data)
 	{
 		size += span.size_bytes();
-		iovecs.emplace_back(span.data(), span.size_bytes());
+		iovecs.push_back({(void *)span.data(), span.size_bytes()});
 	}
 
 	msghdr hdr{
@@ -709,13 +709,13 @@ size_t wivrn::TCP::send_many_raw(std::span<serialization_packet> packets)
 		std::vector<std::span<uint8_t>> & data = packet;
 
 		auto & size = sizes.emplace_back(0);
-		iovecs.emplace_back(&size, sizeof(size));
+		iovecs.push_back({(void *)&size, sizeof(size)});
 		spans.emplace_back((uint8_t *)&size, sizeof(size));
 
 		for (const auto & span: data)
 		{
 			size += span.size_bytes();
-			iovecs.emplace_back(span.data(), span.size_bytes());
+			iovecs.push_back({(void *)span.data(), span.size_bytes()});
 			spans.emplace_back(span.data(), span.size_bytes());
 		}
 	}

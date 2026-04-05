@@ -50,6 +50,7 @@ jobs:
         -DWIVRN_USE_SYSTEM_OPENXR=OFF
         -DGIT_DESC=${{github.sha}}
         -DGIT_COMMIT=${{github.sha}}
+        -DLibArchive_ROOT=$(brew --prefix libarchive)
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build

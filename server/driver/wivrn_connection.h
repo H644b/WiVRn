@@ -126,14 +126,30 @@ public:
 	}
 
 #ifdef __APPLE__
-	int get_tcp_fd() const { return control.get_fd(); }
-	int get_udp_fd() const { return stream.get_fd(); }
-	int release_tcp_fd() { return control.release(); }
-	int release_udp_fd() { return stream.release(); }
-	const std::optional<secrets> & get_secrets() const { return handshake_secrets; }
+	int get_tcp_fd() const
+	{
+		return control.get_fd();
+	}
+	int get_udp_fd() const
+	{
+		return stream.get_fd();
+	}
+	int release_tcp_fd()
+	{
+		return control.release();
+	}
+	int release_udp_fd()
+	{
+		return stream.release();
+	}
+	const std::optional<secrets> & get_secrets() const
+	{
+		return handshake_secrets;
+	}
 
 	static std::unique_ptr<wivrn_connection> from_bootstrap(
-	        TCP && tcp, UDP && udp,
+	        TCP && tcp,
+	        UDP && udp,
 	        const struct compositor_bootstrap_message & bootstrap);
 #endif
 

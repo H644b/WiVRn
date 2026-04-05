@@ -60,7 +60,8 @@ wivrn::incorrect_pin::incorrect_pin() :
 #include "compositor_bootstrap.h"
 
 std::unique_ptr<wivrn::wivrn_connection> wivrn::wivrn_connection::from_bootstrap(
-        TCP && tcp, UDP && udp,
+        TCP && tcp,
+        UDP && udp,
         const compositor_bootstrap_message & b_in)
 {
 	auto b = b_in;
