@@ -28,7 +28,6 @@ class ipc_server_cb : public ipc_server_callbacks
 	void mainloop_entering(ipc_server *, xrt_instance *);
 	void mainloop_leaving(ipc_server *, xrt_instance *);
 	void client_connected(ipc_server *, uint32_t);
-	void client_described(ipc_server *, uint32_t);
 	void client_disconnected(ipc_server *, uint32_t);
 
 public:
